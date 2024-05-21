@@ -1,5 +1,5 @@
 rm(list = ls())
-setwd("C:/Users/micah/OneDrive/Documents/R/Heart disease")
+#setwd("C:/Users/.../R/Heart disease")
 
 data1 <- read.csv("~/R/Heart disease/heart_statlog_cleveland_hungary_final.csv")
 
@@ -26,14 +26,12 @@ data1$sex <- factor(data1$sex,
                     labels = c("Female","Male"))
 table(data1$sex)
 
-#table(data1$chest.pain.type)
 data1$chest.pain <- factor(data1$chest.pain.type,
                            levels=c(1,2,3,4),
                            labels=c("typical angina","atypical angina",
                                     "non-anginal pain","asymptomatic"))
 table(data1$chest.pain)
 
-#table(data1$fasting.blood.sugar)
 data1$fasting.sugar <- factor(data1$fasting.blood.sugar,
                               levels=c(0,1),
                               labels=c("False","True"))
@@ -61,7 +59,7 @@ data1$target <- factor(data1$target,
                        labels=c("No disease","Heart disease"))
 table(data1$target)
 
- #Descriptive Statistics 
+#Descriptive Statistics 
 attach(data1)
 
 par(mfrow=c(3,2))
@@ -97,14 +95,12 @@ logit1 <- glm(target~sex+chest.pain+fasting.sugar+resting.ecg+exercise.angina+ a
 
 summary(logit1)
 
-#Not significant - resting.ecg,age, resting.bp.s. 
-
 logit2 <- glm(target~sex+chest.pain+fasting.sugar+exercise.angina+age
               +cholesterol+max.heart.rate+oldpeak,data=data1,family = binomial)
 summary(logit2)
 
 anova(logit2,logit1,test = "Chisq")
-#P-value > 0.05. So the RSS imporvement is not significant 
+#P-value > 0.05. So the RSS imporvement is not significant in logit1 compared to logit2.
 
 # Get the coefficients of the model
 coefficients <- summary(logit2)$coefficients
@@ -150,14 +146,5 @@ knn.pred<-knn(train.x,test.x,train.heart,k=1)
 table(knn.pred,test$target)
 mean(knn.pred == test$target)
 #(130+146)/357 = 77% highest KNN prediction accuracy 
-
-#Export Dataset
-library(dplyr)
-data1 <- data1 %>%
-  select(-chest.pain.type,-fasting.blood.sugar)
-
-
-library(writexl)
-write_xlsx(data1,"C:\\Users\\micah\\OneDrive\\Documents\\R\\Heart disease\\data.xlsx")
 
 
