@@ -107,7 +107,7 @@ odds_ratios
 # Combine odds ratios with confidence intervals
 confidence_intervals <- exp(confint(model))
 
-#Split into train and test 
+#Split into train and test (Cross Validation)
 set.seed(2)
 train_indices <- sample(seq_len(nrow(data1)),size = 0.7*nrow(data1))
 train <- data1[train_indices,]
